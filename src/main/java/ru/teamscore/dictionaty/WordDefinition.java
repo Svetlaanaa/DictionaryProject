@@ -10,11 +10,6 @@ import java.util.List;
 public class WordDefinition {
     @Getter
     private List<Definition> definitions = new ArrayList<>();
-    public WordDefinition(List<Definition> definitions){
-        for(Definition definition : definitions){
-            this.definitions.add(definition);
-        }
-    }
 
     public void deleteDefinition(int id){
         for(Definition definition : definitions){

@@ -32,6 +32,12 @@ public class Definition {
         this.speechPart = speechPart;
     }
 
+    public Definition(String definitionText, SpeechPart speechPart, Word synonym){
+        this.definitionText = definitionText;
+        this.speechPart = speechPart;
+        this.synonyms.add(synonym);
+    }
+
     public boolean isUrl(String source){
         String regex = "^(http(s)?://)?[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
         Pattern pattern = Pattern.compile(regex);
