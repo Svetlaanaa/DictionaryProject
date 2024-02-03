@@ -5,9 +5,9 @@ public enum SpeechPart {
     ADJECTIVE("прилагательное"),
     VERB("глагол"),
     ADVERB("наречие");
-    private final String title;
+    private final String speechPart;
 
-    SpeechPart(String title) {
-        this.title = title;
+    SpeechPart(String speechPart) {
+        this.speechPart = speechPart;
     }
 }
