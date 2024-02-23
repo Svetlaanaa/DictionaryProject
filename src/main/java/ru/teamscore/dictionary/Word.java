@@ -1,9 +1,9 @@
-package ru.teamscore.dictionaty;
+package ru.teamscore.dictionary;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.teamscore.dictionaty.enums.SpeechPart;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Word {
@@ -26,5 +26,21 @@ public class Word {
 
     public List<Definition> getDefinition(){
         return definitions.getDefinitions();
+    }
+
+    public class WordDefinition {
+        @Getter
+        private List<Definition> definitions = new ArrayList<>();
+
+        public void deleteDefinition(int id){
+            for(Definition definition : definitions){
+                if(definition.getId() == id)
+                    definitions.remove(definition);
+            }
+        }
+
+        public void addDefinition(Definition definition){
+            definitions.add(definition);
+        }
     }
 }

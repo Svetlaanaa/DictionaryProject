@@ -1,4 +1,4 @@
-package ru.teamscore.dictionaty;
+package ru.teamscore.dictionary;
 
 import lombok.Getter;
 

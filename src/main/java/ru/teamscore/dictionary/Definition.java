@@ -1,14 +1,14 @@
-package ru.teamscore.dictionaty;
+package ru.teamscore.dictionary;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.teamscore.dictionaty.enums.SpeechPart;
+import ru.teamscore.dictionary.enums.SpeechPart;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 public class Definition {
     @Getter
@@ -38,8 +38,8 @@ public class Definition {
         this.synonyms.add(synonym);
     }
 
-    public boolean isUrl(String source){
-        String regex = "^(http(s)?://)?[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+    public static boolean isUrl(String source){
+        String regex = "^(http|https)://([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}(:\\d{1,5})?(/[\\w-./?%&=]*)?$";;
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(source);
         return matcher.matches();
@@ -49,16 +49,24 @@ public class Definition {
         this.synonyms.add(word);
     }
 
-    public void deleteSynonym(String basicForm){
-        for (Word synonym : this.synonyms) {
-            if(synonym.getBasicForm() == basicForm){
-                this.synonyms.remove(synonym);
+    public void deleteSynonym(String basicForm) {
+        Iterator<Word> iterator = this.synonyms.iterator();
+        while (iterator.hasNext()) {
+            Word synonym = iterator.next();
+            if (synonym.getBasicForm().equals(basicForm)) {
+                iterator.remove();
             }
         }
     }
 
     public void deleteUsageExample(){
         this.usageExample = null;
+    }
+
+    public void addSource(String source){
+        if(isUrl(source)){
+            this.sources.add(source);
+        }
     }
 
     public void deleteSource(String source){

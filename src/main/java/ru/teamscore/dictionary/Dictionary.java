@@ -1,7 +1,6 @@
-package ru.teamscore.dictionaty;
+package ru.teamscore.dictionary;
 
-import lombok.Setter;
-import ru.teamscore.dictionaty.enums.SpeechPart;
+import ru.teamscore.dictionary.enums.SpeechPart;
 
 import java.util.ArrayList;
 import java.util.Comparator;
