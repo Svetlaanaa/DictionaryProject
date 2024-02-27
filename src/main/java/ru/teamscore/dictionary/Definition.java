@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class Definition {
     @Getter
-    private int id;
+    private final int id;
     @Getter
     @Setter
     private SpeechPart speechPart;
@@ -27,12 +27,14 @@ public class Definition {
     @Getter
     private List<Word> synonyms = new ArrayList<>();
 
-    public Definition(String definitionText, SpeechPart speechPart){
+    public Definition(int id, String definitionText, SpeechPart speechPart){
+        this.id = id;
         this.definitionText = definitionText;
         this.speechPart = speechPart;
     }
 
-    public Definition(String definitionText, SpeechPart speechPart, Word synonym){
+    public Definition(int id, String definitionText, SpeechPart speechPart, Word synonym){
+        this.id = id;
         this.definitionText = definitionText;
         this.speechPart = speechPart;
         this.synonyms.add(synonym);

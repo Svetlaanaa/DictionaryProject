@@ -4,43 +4,61 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Word {
     @Getter
-    private int id;
+    private final int id;
     @Getter
     @Setter
     private String basicForm;
-    private OtherForms otherForms;
-    private WordDefinition definitions = new WordDefinition();
+    @Getter
+    private OtherForms otherForms = new OtherForms();
+    @Getter
+    private List<Definition> definitions = new ArrayList<>();
 
-    public Word(String basicForm, Definition definition){
+    private Dictionary dictionary;
+
+    public Word(int id, String basicForm, Definition definition){
+        this.id = id;
         this.basicForm = basicForm;
-        definitions.addDefinition(definition);
+        definitions.add(definition);
     }
 
-    public List<String> getOtherForms(){
-        return otherForms.getForms();
+    public Word(int id, String basicForm, Definition definition, Dictionary dictionary){
+        this.id = id;
+        this.basicForm = basicForm;
+        definitions.add(definition);
+        this.dictionary = dictionary;
+        dictionary.addWord(this);
     }
 
-    public List<Definition> getDefinition(){
-        return definitions.getDefinitions();
-    }
-
-    public class WordDefinition {
-        @Getter
-        private List<Definition> definitions = new ArrayList<>();
-
-        public void deleteDefinition(int id){
-            for(Definition definition : definitions){
-                if(definition.getId() == id)
-                    definitions.remove(definition);
+    public Definition getDefinition(int id) {
+        for (Definition definition : definitions){
+            if (definition.getId() == id){
+                return definition;
             }
         }
+        return null;
+    }
 
-        public void addDefinition(Definition definition){
-            definitions.add(definition);
+    public void deleteDefinition(int id){
+        Iterator<Definition> iterator = definitions.iterator();
+        while (iterator.hasNext()) {
+            Definition definition = iterator.next();
+            if (definition.getId() == id) {
+                iterator.remove();
+            }
         }
+    }
+
+    public void addDefinition(Definition definition){
+        for (Definition definition1 : definitions){
+            if (definition1.getId() == definition.getId()){
+                return;
+            }
+        }
+        definitions.add(definition);
     }
 }

@@ -1,20 +1,29 @@
 package ru.teamscore.dictionary;
 
-import ru.teamscore.dictionary.enums.SpeechPart;
+import lombok.Getter;
+import lombok.NonNull;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Dictionary {
+    @Getter
     private List<Word> words = new ArrayList<>();
 
+    @Getter
     private final DictionarySearch search = new DictionarySearch();
 
-    public List<Word> getWords(int page, int pageSize){
+    @Getter
+    private final DictionaryStatistic statistic = new DictionaryStatistic();
+
+    public Dictionary(List<Word> words){
+        for(Word word : words){
+            this.words.add(word);
+        }
+    }
+
+    public List<Word> getWordsPage(int page, int pageSize){
         return words.stream()
-                .sorted(Comparator.comparing(Word::getBasicForm))
+                .sorted(Comparator.comparing(Word::getId))
                 .skip(page * pageSize)
                 .limit(pageSize)
                 .toList();
@@ -26,25 +35,34 @@ public class Dictionary {
         return words.get(randomIndex);
     }
 
-    public void addWord(String basicForm, String definitionText, SpeechPart speechPart){
-        words.add(new Word(basicForm, new Definition(definitionText, speechPart)));
+    public Optional<Word> getWord(int id){
+        return words.stream()
+                .filter(i -> i.getId() == id)
+                .findFirst();
     }
 
+    public void addWord(@NonNull Word newWord) {
+        if (getWord(newWord.getId()).isEmpty()) {
+            words.add(newWord);
+        }
+    }
     public void deleteWord(int id){
-        for(Word word : words){
-            if(word.getId() == id){
-                words.remove(word);
+        Iterator<Word> iterator = words.iterator();
+        while (iterator.hasNext()) {
+            Word word = iterator.next();
+            if (word.getId() == id) {
+                iterator.remove();
             }
         }
     }
 
     public class DictionarySearch {
         public List<Word> searchWords(String basicForm, boolean registerCheck){
-            if(registerCheck)
+            if(!registerCheck)
                 basicForm = basicForm.toLowerCase();
             List<Word> foundWords = new ArrayList<>();
             for(Word word : words){
-                if((registerCheck ? word.getBasicForm() : word.getBasicForm().toLowerCase()) == basicForm){
+                if((registerCheck ? word.getBasicForm() : word.getBasicForm().toLowerCase()).equals(basicForm)){
                     foundWords.add(word);
                 }
             }
@@ -52,15 +70,15 @@ public class Dictionary {
         }
 
         public List<Word> searchWordsIgnoreMorphology(String basicForm, boolean registerCheck){
-            if(registerCheck)
+            if(!registerCheck)
                 basicForm = basicForm.toLowerCase();
             List<Word> foundWords = new ArrayList<>();
             for(Word word : words){
-                if((registerCheck ? word.getBasicForm() : word.getBasicForm().toLowerCase()) == basicForm){
+                if((registerCheck ? word.getBasicForm() : word.getBasicForm().toLowerCase()).equals(basicForm)){
                     foundWords.add(word);
                 }else {
-                    for(String form : word.getOtherForms()){
-                        if((registerCheck ? form : form.toLowerCase()) == basicForm){
+                    for(String form : word.getOtherForms().getForms()){
+                        if((registerCheck ? form : form.toLowerCase()).equals(basicForm)){
                             foundWords.add(word);
                         }
                     }
@@ -70,15 +88,15 @@ public class Dictionary {
         }
 
         public List<Word> searchBySynonyms(String basicForm, boolean registerCheck){
-            if(registerCheck)
+            if(!registerCheck)
                 basicForm = basicForm.toLowerCase();
             List<Word> foundWords = new ArrayList<>();
             for(Word word : words){
-                if((registerCheck ? word.getBasicForm() : word.getBasicForm().toLowerCase()) == basicForm){
+                if((registerCheck ? word.getBasicForm() : word.getBasicForm().toLowerCase()).equals(basicForm)){
                     foundWords.add(word);
                 }else {
-                    for(String form : word.getOtherForms()){
-                        if((registerCheck ? form : form.toLowerCase()) == basicForm){
+                    for(String form : word.getOtherForms().getForms()){
+                        if((registerCheck ? form : form.toLowerCase()).equals(basicForm)){
                             foundWords.add(word);
                         }
                     }
@@ -90,7 +108,7 @@ public class Dictionary {
         public List<Word> searchByDefinitionText(String definitionText) {
             List<Word> foundWords = new ArrayList<>();
             for(Word word : words){
-                for (Definition definition : word.getDefinition()){
+                for (Definition definition : word.getDefinitions()){
                     if(definition.getDefinitionText() == definitionText)
                         foundWords.add(word);
                 }
@@ -107,7 +125,7 @@ public class Dictionary {
         public int getQuantityDefinition(){
             int quantity = 0;
             for (Word word : words){
-                quantity += word.getDefinition().size();
+                quantity += word.getDefinitions().size();
             }
             return quantity;
         }
@@ -115,7 +133,7 @@ public class Dictionary {
         public int getQuantitySynonyms(){
             int quantity = 0;
             for (Word word : words){
-                for(Definition definition : word.getDefinition()) {
+                for(Definition definition : word.getDefinitions()) {
                     quantity += definition.getSynonyms().size();
                 }
             }

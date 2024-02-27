@@ -8,8 +8,8 @@ import ru.teamscore.dictionary.enums.SpeechPart;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DefinitionTest {
-    Definition definition = new Definition("Текст определения", SpeechPart.ADVERB);
-    Word word1 = new Word("базовая форма", definition);
+    Definition definition = new Definition(1, "Текст определения", SpeechPart.ADVERB);
+    Word word1 = new Word(1,"базовая форма", definition);
 
     @ParameterizedTest
     @ValueSource(strings = {"http://www.example.com", "https://example.com/path/to/page",
@@ -27,8 +27,8 @@ class DefinitionTest {
 
     @Test
     void deleteSynonym() {
-        Definition definition2 = new Definition("Текст определения 2", SpeechPart.ADJECTIVE);
-        Word word2 = new Word("форма", definition2);
+        Definition definition2 = new Definition(2, "Текст определения 2", SpeechPart.ADJECTIVE);
+        Word word2 = new Word(2,"форма", definition2);
         definition.addSynonym(word2);
         assertEquals(1, definition.getSynonyms().size());
 
