@@ -14,9 +14,9 @@ public class Word {
     @Setter
     private String basicForm;
     @Getter
-    private OtherForms otherForms = new OtherForms();
+    private final OtherForms otherForms = new OtherForms();
     @Getter
-    private List<Definition> definitions = new ArrayList<>();
+    private final List<Definition> definitions = new ArrayList<>();
 
     private Dictionary dictionary;
 

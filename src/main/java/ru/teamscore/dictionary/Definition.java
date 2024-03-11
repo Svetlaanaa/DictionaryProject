@@ -23,9 +23,11 @@ public class Definition {
     @Setter
     private String usageExample;
     @Getter
-    private List<String> sources = new ArrayList<>();
+    private final List<String> sources = new ArrayList<>();
     @Getter
-    private List<Word> synonyms = new ArrayList<>();
+    private final List<Word> synonyms = new ArrayList<>();
+    private final static Pattern pattern = Pattern.compile(
+            "^(http|https)://([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}(:\\d{1,5})?(/[\\w-./?%&=]*)?$");
 
     public Definition(int id, String definitionText, SpeechPart speechPart){
         this.id = id;
@@ -41,8 +43,6 @@ public class Definition {
     }
 
     public static boolean isUrl(String source){
-        String regex = "^(http|https)://([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}(:\\d{1,5})?(/[\\w-./?%&=]*)?$";;
-        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(source);
         return matcher.matches();
     }
