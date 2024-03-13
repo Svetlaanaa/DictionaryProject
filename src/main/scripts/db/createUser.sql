@@ -1,0 +1,1 @@
+CREATE USER dictionary_user WITH PASSWORD 'user';
