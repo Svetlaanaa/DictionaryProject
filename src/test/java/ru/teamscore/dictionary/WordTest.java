@@ -1,6 +1,8 @@
 package ru.teamscore.dictionary;
 
 import org.junit.jupiter.api.Test;
+import ru.teamscore.dictionary.entities.Definition;
+import ru.teamscore.dictionary.entities.Word;
 import ru.teamscore.dictionary.enums.SpeechPart;
 
 import static org.junit.jupiter.api.Assertions.*;

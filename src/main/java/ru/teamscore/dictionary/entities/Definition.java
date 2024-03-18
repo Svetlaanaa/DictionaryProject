@@ -1,6 +1,8 @@
-package ru.teamscore.dictionary;
+package ru.teamscore.dictionary.entities;
 
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.teamscore.dictionary.enums.SpeechPart;
 
@@ -10,20 +12,38 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@NoArgsConstructor
+@Entity
 public class Definition {
     @Getter
-    private final int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "word_id")
+    @Getter
+    private long wordId;
+    @Enumerated(EnumType.STRING)
     @Getter
     @Setter
     private SpeechPart speechPart;
+    @Column(name = "definition_text")
     @Getter
     @Setter
     private String definitionText;
+    @Column(name = "usage_example")
     @Getter
     @Setter
     private String usageExample;
+    @ElementCollection
+    @CollectionTable(name = "source", joinColumns = @JoinColumn(name = "definition_id"))
+    @Column(name = "source")
     @Getter
     private final List<String> sources = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "synonym",
+            joinColumns = @JoinColumn(name = "definition_id"),
+            inverseJoinColumns = @JoinColumn(name = "id"))
     @Getter
     private final List<Word> synonyms = new ArrayList<>();
     private final static Pattern pattern = Pattern.compile(

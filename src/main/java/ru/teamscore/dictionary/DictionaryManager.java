@@ -1,13 +1,21 @@
 package ru.teamscore.dictionary;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import ru.teamscore.dictionary.entities.Definition;
+import ru.teamscore.dictionary.entities.Word;
 
 import java.util.*;
 
-public class Dictionary {
+@RequiredArgsConstructor
+public class DictionaryManager {
     @Getter
     private List<Word> words = new ArrayList<>();
+
+    private final EntityManager entityManager;
 
     @Getter
     private final DictionarySearch search = new DictionarySearch();
@@ -15,18 +23,24 @@ public class Dictionary {
     @Getter
     private final DictionaryStatistic statistic = new DictionaryStatistic();
 
-    public Dictionary(List<Word> words){
-        for(Word word : words){
-            this.words.add(word);
-        }
-    }
+//    public DictionaryManager(List<Word> words){
+//        for(Word word : words){
+//            this.words.add(word);
+//        }
+//    }
 
     public List<Word> getWordsPage(int page, int pageSize){
-        return words.stream()
-                .sorted(Comparator.comparing(Word::getId))
-                .skip(page * pageSize)
-                .limit(pageSize)
-                .toList();
+//        return words.stream()
+//                .sorted(Comparator.comparing(Word::getId))
+//                .skip(page * pageSize)
+//                .limit(pageSize)
+//                .toList();
+        String jpql = "SELECT word FROM Word word ORDER BY word.id";
+        TypedQuery<Word> query = entityManager.createQuery(jpql, Word.class);
+        query.setFirstResult(page * pageSize);
+        query.setMaxResults(pageSize);
+        return query.getResultList();
+
     }
 
     public Word getRandomWord(){
@@ -35,7 +49,7 @@ public class Dictionary {
         return words.get(randomIndex);
     }
 
-    public Optional<Word> getWord(int id){
+    public Optional<Word> getWord(long id){
         return words.stream()
                 .filter(i -> i.getId() == id)
                 .findFirst();

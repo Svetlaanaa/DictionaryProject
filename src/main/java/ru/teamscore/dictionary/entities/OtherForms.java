@@ -1,11 +1,19 @@
-package ru.teamscore.dictionary;
+package ru.teamscore.dictionary.entities;
 
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
+@Entity
 public class OtherForms {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @ElementCollection
     @Getter
     private List<String> forms = new ArrayList<>();
 

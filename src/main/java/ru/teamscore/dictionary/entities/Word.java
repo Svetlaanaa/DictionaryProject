@@ -1,24 +1,43 @@
-package ru.teamscore.dictionary;
+package ru.teamscore.dictionary.entities;
 
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import ru.teamscore.dictionary.DictionaryManager;
+import ru.teamscore.dictionary.entities.Definition;
+import ru.teamscore.dictionary.entities.OtherForms;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@NoArgsConstructor
+@Entity
+@Table(name = "word", schema = "words")
+@NamedQuery(name = "wordsCount", query = "select count(*) from Word")
 public class Word {
     @Getter
-    private final int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
     @Getter
     @Setter
+    @Column(name = "basic_form", nullable = false)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     private String basicForm;
+
     @Getter
+    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
     private final OtherForms otherForms = new OtherForms();
     @Getter
+    @OneToMany
     private final List<Definition> definitions = new ArrayList<>();
 
-    private Dictionary dictionary;
+    private DictionaryManager dictionaryManager;      //нужно ли поле?..
 
     public Word(int id, String basicForm, Definition definition){
         this.id = id;
@@ -26,12 +45,12 @@ public class Word {
         definitions.add(definition);
     }
 
-    public Word(int id, String basicForm, Definition definition, Dictionary dictionary){
+    public Word(int id, String basicForm, Definition definition, DictionaryManager dictionaryManager){
         this.id = id;
         this.basicForm = basicForm;
         definitions.add(definition);
-        this.dictionary = dictionary;
-        dictionary.addWord(this);
+        this.dictionaryManager = dictionaryManager;
+        dictionaryManager.addWord(this);
     }
 
     public Definition getDefinition(int id) {

@@ -3,6 +3,8 @@ package ru.teamscore.dictionary;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import ru.teamscore.dictionary.entities.Definition;
+import ru.teamscore.dictionary.entities.Word;
 import ru.teamscore.dictionary.enums.SpeechPart;
 
 import static org.junit.jupiter.api.Assertions.*;
