@@ -7,7 +7,7 @@
         <!-- Connection settings -->
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
         <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/db_dictionary_test</property>
-        <property name="hibernate.connection.username">dictionary_user</property>
+        <property name="hibernate.connection.username">dictionary_test_user</property>
         <property name="hibernate.connection.password">12345678</property>
         <!-- Print executed SQL to stdout -->
         <property name="show_sql">true</property>

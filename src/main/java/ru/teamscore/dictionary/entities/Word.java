@@ -31,10 +31,7 @@ public class Word {
     private String basicForm;
 
     @Getter
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
-    private final OtherForms otherForms = new OtherForms();
-    @Getter
-    @OneToMany
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
     private final List<Definition> definitions = new ArrayList<>();
 
     private DictionaryManager dictionaryManager;      //нужно ли поле?..
@@ -50,7 +47,7 @@ public class Word {
         this.basicForm = basicForm;
         definitions.add(definition);
         this.dictionaryManager = dictionaryManager;
-        dictionaryManager.addWord(this);
+        //dictionaryManager.addWord(this);
     }
 
     public Definition getDefinition(int id) {

@@ -13,9 +13,13 @@ public class OtherForms {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @ElementCollection
-    @Getter
     private List<String> forms = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "word_id")
+    private Word word;
 
     public void addForm(String form){
         this.forms.add(form);

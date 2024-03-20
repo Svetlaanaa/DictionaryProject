@@ -14,20 +14,30 @@ import java.util.regex.Pattern;
 
 @NoArgsConstructor
 @Entity
+@Table(name = "definition", schema = "definitions")
 public class Definition {
     @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
 
-    @Column(name = "word_id")
-    @Getter
-    private long wordId;
-    @Enumerated(EnumType.STRING)
+//    @Column(name = "word_id")
+//    @Getter
+//    private long wordId;
+
     @Getter
     @Setter
+    @ManyToOne
+    @JoinColumn(name = "word_id")
+    private Word word;
+
+    @Getter
+    @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(name = "speech_part", length = 100)
     private SpeechPart speechPart;
-    @Column(name = "definition_text")
+    @Column(name = "definition_text", nullable = false)
     @Getter
     @Setter
     private String definitionText;
@@ -36,16 +46,15 @@ public class Definition {
     @Setter
     private String usageExample;
     @ElementCollection
-    @CollectionTable(name = "source", joinColumns = @JoinColumn(name = "definition_id"))
+    @CollectionTable(name = "source", schema = "definitions", joinColumns = @JoinColumn(name = "definition_id"))
     @Column(name = "source")
     @Getter
     private final List<String> sources = new ArrayList<>();
-    @ManyToMany
-    @JoinTable(name = "synonym",
-            joinColumns = @JoinColumn(name = "definition_id"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+
+    @OneToMany(mappedBy = "definition", cascade = CascadeType.ALL)
     @Getter
     private final List<Word> synonyms = new ArrayList<>();
+
     private final static Pattern pattern = Pattern.compile(
             "^(http|https)://([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}(:\\d{1,5})?(/[\\w-./?%&=]*)?$");
 
