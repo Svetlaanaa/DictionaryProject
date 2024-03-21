@@ -22,10 +22,6 @@ public class Definition {
     @Column(name = "id")
     private long id;
 
-//    @Column(name = "word_id")
-//    @Getter
-//    private long wordId;
-
     @Getter
     @Setter
     @ManyToOne
@@ -37,23 +33,22 @@ public class Definition {
     @Enumerated(EnumType.STRING)
     @Column(name = "speech_part", length = 100)
     private SpeechPart speechPart;
+
     @Column(name = "definition_text", nullable = false)
     @Getter
     @Setter
     private String definitionText;
+
     @Column(name = "usage_example")
     @Getter
     @Setter
     private String usageExample;
+
     @ElementCollection
     @CollectionTable(name = "source", schema = "definitions", joinColumns = @JoinColumn(name = "definition_id"))
     @Column(name = "source")
     @Getter
     private final List<String> sources = new ArrayList<>();
-
-    @OneToMany(mappedBy = "definition", cascade = CascadeType.ALL)
-    @Getter
-    private final List<Word> synonyms = new ArrayList<>();
 
     private final static Pattern pattern = Pattern.compile(
             "^(http|https)://([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}(:\\d{1,5})?(/[\\w-./?%&=]*)?$");
@@ -68,7 +63,6 @@ public class Definition {
         this.id = id;
         this.definitionText = definitionText;
         this.speechPart = speechPart;
-        this.synonyms.add(synonym);
     }
 
     public static boolean isUrl(String source){
@@ -76,19 +70,15 @@ public class Definition {
         return matcher.matches();
     }
 
-    public void addSynonym(Word word){
-        this.synonyms.add(word);
-    }
-
-    public void deleteSynonym(String basicForm) {
-        Iterator<Word> iterator = this.synonyms.iterator();
-        while (iterator.hasNext()) {
-            Word synonym = iterator.next();
-            if (synonym.getBasicForm().equals(basicForm)) {
-                iterator.remove();
-            }
-        }
-    }
+//    public void deleteSynonym(String basicForm) {
+//        Iterator<Word> iterator = this.synonyms.iterator();
+//        while (iterator.hasNext()) {
+//            Word synonym = iterator.next();
+//            if (synonym.getBasicForm().equals(basicForm)) {
+//                iterator.remove();
+//            }
+//        }
+//    }
 
     public void deleteUsageExample(){
         this.usageExample = null;

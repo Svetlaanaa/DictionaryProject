@@ -5,83 +5,29 @@ import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.*;
 
+import ru.teamscore.dictionary.entities.Definition;
+import ru.teamscore.dictionary.entities.OtherForms;
+import ru.teamscore.dictionary.entities.Synonym;
 import ru.teamscore.dictionary.entities.Word;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DictionaryManagerTest {
     private static EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
 
-    //List<Word> testWords = new ArrayList<>();
-
-//    //добавление 5 слов
-//    {
-//        testWords.add(new Word(
-//                    1,
-//                    "слово 1",
-//                    new Definition(1, "Текст определения 1", SpeechPart.ADVERB)
-//        ));
-//        testWords.add(new Word(
-//                    2,
-//                    "Слово 2",
-//                    new Definition(1, "Текст определения 1", SpeechPart.ADJECTIVE)
-//        ));
-//        testWords.add(new Word(
-//                    3,
-//                    "слово 3",
-//                    new Definition(1, "Текст определения 1", SpeechPart.NOUN)
-//        ));
-//        testWords.add(new Word(
-//                    4,
-//                    "слово 4",
-//                    new Definition(1, "Текст определения 1", SpeechPart.ADVERB)
-//        ));
-//        testWords.add(new Word(
-//                    5,
-//                    "слово 5",
-//                    new Definition(1, "Текст определения 1", SpeechPart.VERB)
-//        ));
-//    }
-//
-
-
-//
-//    //добавление к каждому из 5 слов по 3 словоформы
-//    {
-//        Iterator<Word> iterator = testWords.iterator();
-//        int k = 0;
-//        while (iterator.hasNext()) {
-//            Word word = iterator.next();
-//            k++;
-//            for (int i = 0; i < 3; i++){
-//                word.getOtherForms().addForm("форма " + k + "_" + i);
-//            }
-//        }
-//    }
-//
-//    //добавление к каждому из 5 слов по 1 синониму -> всего 10 слов в словаре
-//    {
-//        Iterator<Word> iterator = testWords.iterator();
-//        int k = 0;
-//        while (iterator.hasNext()) {
-//            Word word = iterator.next();
-//            k++;
-//            word.getDefinition(1).addSynonym(new Word(
-//                    5 + k,
-//                    "слово " + (5 + k),
-//                    new Definition(1, "Текст определения 2", word.getDefinition(1).getSpeechPart()),
-//                    testDictionaryManager));
-//        }
-//    }
 
     @BeforeAll
     public static void setup() throws IOException {
         entityManagerFactory = new Configuration()
                 .configure("hibernate-postgres.cfg.xml")
                 .addAnnotatedClass(Word.class)
+                .addAnnotatedClass(Definition.class)
+                .addAnnotatedClass(OtherForms.class)
+                .addAnnotatedClass(Synonym.class)
                 .buildSessionFactory();
 
         SqlScripts.runFromFile(entityManagerFactory, "createAll.sql");
@@ -108,61 +54,70 @@ class DictionaryManagerTest {
         SqlScripts.runFromFile(entityManagerFactory, "clearAll.sql");
     }
 
-    DictionaryManager testDictionaryManager = new DictionaryManager(entityManager);
+    DictionaryManager testDictionaryManager;
 
     @Test
     void getWordsPage(){
-        assertEquals(5, testDictionaryManager.getWordsPage(0, 5));
-        assertEquals(5, testDictionaryManager.getWordsPage(3, 5));
+        testDictionaryManager = new DictionaryManager(entityManager);
+        assertEquals(5, testDictionaryManager.getWordsPage(0, 5).size());
+        assertEquals(2, testDictionaryManager.getWordsPage(3, 5).size());
     }
 
-//    @Test
-//    void getWords() {
-//        assertEquals(1, testDictionaryManager.getWordsPage(0,2).get(0).getId());
-//        assertEquals(3, testDictionaryManager.getWordsPage(1,2).get(0).getId());
-//
-//        assertEquals(1, testDictionaryManager.getWordsPage(3,3).size());
-//
-//        assertEquals(10, testDictionaryManager.getWordsPage(0,15).size());
-//    }
-//
-//    @Test
-//    void getRandomWord() {
-//        assertTrue(testWords.contains(testDictionaryManager.getRandomWord()));
-//    }
-//
-//    @Test
-//    void addWord() {
-//        Word newWord = new Word(5,"слово", new Definition(
-//                1, "Текст определения 1", SpeechPart.VERB));
-//        testDictionaryManager.addWord(newWord);
-//        assertEquals(10, testDictionaryManager.getWords().size());
-//
-//        newWord = new Word(11,"слово", new Definition(
-//                1, "Текст определения 1", SpeechPart.VERB));
-//        testDictionaryManager.addWord(newWord);
-//        assertEquals(11, testDictionaryManager.getWords().size());
-//    }
-//
-//    @Test
-//    void deleteWord() {
-//        testDictionaryManager.deleteWord(20);
-//        assertEquals(10, testDictionaryManager.getWords().size());
-//
-//        testDictionaryManager.deleteWord(5);
-//        assertEquals(9, testDictionaryManager.getWords().size());
-//
-//        testDictionaryManager.deleteWord(1);
-//        assertEquals(8, testDictionaryManager.getWords().size());
-//    }
-//
-//
-//    @Test
-//    void searchWords(){
-//        assertEquals(0, testDictionaryManager.getSearch().searchWords("слово 2", true).size());
-//        assertEquals(1, testDictionaryManager.getSearch().searchWords("Слово 2", false).size());
-//    }
-//
+    @Test
+    void getRandomWord() {
+        testDictionaryManager = new DictionaryManager(entityManager);
+        var result = testDictionaryManager.getRandomWord();
+        assertTrue(result.isPresent());
+    }
+
+    @Test
+    void getWord() {
+        testDictionaryManager = new DictionaryManager(entityManager);
+        var result = testDictionaryManager.getWord(2);
+        assertEquals("Бегать", result.get().getBasicForm());
+    }
+
+    @Test
+    void addItem() {
+        testDictionaryManager = new DictionaryManager(entityManager);
+        Word[] wordsToAdd = new Word[]{
+                Word.load(
+                        0,
+                        "Карандаш"
+                ),
+                Word.load(
+                        0,
+                        "Ноутбук"
+                )
+        };
+        long startCount = testDictionaryManager.getWordsCount();
+        testDictionaryManager.addWord(wordsToAdd[0]);
+        assertEquals(startCount + 1, testDictionaryManager.getWordsCount(), "Item added");
+        testDictionaryManager.addWord(wordsToAdd[0]);
+        assertEquals(startCount + 1, testDictionaryManager.getWordsCount(), "Item not added, already exists");
+        testDictionaryManager.addWord(wordsToAdd[1]);
+        assertEquals(startCount + 2, testDictionaryManager.getWordsCount(), "Item added");
+    }
+
+    @Test
+    void deleteWord() {
+        testDictionaryManager = new DictionaryManager(entityManager);
+        testDictionaryManager.deleteWord(0);
+        assertEquals(17, testDictionaryManager.getWordsCount());
+        testDictionaryManager.deleteWord(2);
+        assertEquals(16, testDictionaryManager.getWordsCount());
+    }
+
+
+    @Test
+    void searchWords(){
+        testDictionaryManager = new DictionaryManager(entityManager);
+        assertEquals(0, testDictionaryManager.getSearch().searchWords("книга", true, true).size());
+        assertEquals(1, testDictionaryManager.getSearch().searchWords("книга", false, true).size());
+        assertEquals(0, testDictionaryManager.getSearch().searchWords("Книгу", false, true).size());
+        assertEquals(1, testDictionaryManager.getSearch().searchWords("Книгу", false, false).size());
+    }
+
 //    @Test
 //    void searchWordsIgnoreMorphology(){
 //        assertEquals(1, testDictionaryManager.getSearch().searchWordsIgnoreMorphology("форма 1_1", false).size());

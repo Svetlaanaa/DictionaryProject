@@ -27,22 +27,22 @@ class DefinitionTest {
         assertFalse(Definition.isUrl(value));
     }
 
-    @Test
-    void deleteSynonym() {
-        Definition definition2 = new Definition(2, "Текст определения 2", SpeechPart.ADJECTIVE);
-        Word word2 = new Word(2,"форма", definition2);
-        definition.addSynonym(word2);
-        assertEquals(1, definition.getSynonyms().size());
-
-        definition.deleteSynonym("форма1");
-        assertEquals(1, definition.getSynonyms().size());
-
-        definition.deleteSynonym("форма");
-        assertEquals(0, definition.getSynonyms().size());
-
-        definition.deleteSynonym("форма");
-        assertEquals(0, definition.getSynonyms().size());
-    }
+//    @Test
+//    void deleteSynonym() {
+//        Definition definition2 = new Definition(2, "Текст определения 2", SpeechPart.ADJECTIVE);
+//        Word word2 = new Word(2,"форма", definition2);
+//        definition.addSynonym(word2);
+//        assertEquals(1, definition.getSynonyms().size());
+//
+//        definition.deleteSynonym("форма1");
+//        assertEquals(1, definition.getSynonyms().size());
+//
+//        definition.deleteSynonym("форма");
+//        assertEquals(0, definition.getSynonyms().size());
+//
+//        definition.deleteSynonym("форма");
+//        assertEquals(0, definition.getSynonyms().size());
+//    }
 
     @Test
     void deleteSource() {

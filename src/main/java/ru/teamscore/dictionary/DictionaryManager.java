@@ -1,6 +1,7 @@
 package ru.teamscore.dictionary;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import lombok.Getter;
 import lombok.NonNull;
@@ -17,9 +18,9 @@ public class DictionaryManager {
 
     private final EntityManager entityManager;
 
-//    @Getter
-//    private final DictionarySearch search = new DictionarySearch();
-//
+    @Getter
+    private final DictionarySearch search = new DictionarySearch();
+
 //    @Getter
 //    private final DictionaryStatistic statistic = new DictionaryStatistic();
 
@@ -29,67 +30,96 @@ public class DictionaryManager {
         query.setFirstResult(page * pageSize);
         query.setMaxResults(pageSize);
         return query.getResultList();
-
     }
 
-//    public Word getRandomWord(){
-//        Random random = new Random();
-//        int randomIndex = random.nextInt(words.size());
-//        return words.get(randomIndex);
-//    }
-//
-//    public Optional<Word> getWord(long id){
-//        return words.stream()
-//                .filter(i -> i.getId() == id)
-//                .findFirst();
-//    }
-//
-//    public void addWord(@NonNull Word newWord) {
-//        if (getWord(newWord.getId()).isEmpty()) {
-//            words.add(newWord);
-//        }
-//    }
-//    public void deleteWord(int id){
-//        Iterator<Word> iterator = words.iterator();
-//        while (iterator.hasNext()) {
-//            Word word = iterator.next();
-//            if (word.getId() == id) {
-//                iterator.remove();
+    public long getWordsCount() {
+        return entityManager
+                .createNamedQuery("wordsCount", Long.class)
+                .getSingleResult();
+    }
+
+    public Optional<Word> getRandomWord(){
+        Random random = new Random();
+        try{
+            long randomIndex = random.nextLong(getWordsCount());
+            return Optional.of(entityManager.createNamedQuery("wordById", Word.class)
+                    .setParameter("id", randomIndex)
+                    .getSingleResult());
+        }catch (NoResultException e){
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Word> getWord(long id){
+        try{
+            return Optional.of(entityManager.createNamedQuery("wordById", Word.class)
+                    .setParameter("id", id)
+                    .getSingleResult());
+        }catch (NoResultException e){
+            return Optional.empty();
+        }
+    }
+
+    public void addWord(@NonNull Word newWord) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(newWord);
+        entityManager.getTransaction().commit();
+    }
+
+    public void deleteWord(long id){
+        entityManager.getTransaction().begin();
+        if(getWord(id).isPresent())
+            entityManager.remove(getWord(id).get());
+        entityManager.getTransaction().commit();
+    }
+
+
+    public class DictionarySearch {
+        public List<Word> searchWords(String basicForm, boolean registerCheck, boolean morphologyCheck){
+            String jpql = "SELECT w FROM Word w WHERE ";
+            if (!registerCheck) {
+                basicForm = basicForm.toLowerCase();
+            }
+            if (registerCheck) {
+                jpql += "w.basicForm = :basicForm";
+            } else {
+                jpql += "LOWER(w.basicForm) = :basicForm";
+            }
+            TypedQuery<Word> query = entityManager.createQuery(jpql, Word.class);
+            query.setParameter("basicForm", basicForm);
+            List<Word> words = query.getResultList();
+            if(!morphologyCheck){
+                words.addAll(searchWordsIgnoreMorphology(basicForm, registerCheck));
+            }
+            return words;
+        }
+
+        public List<Word> searchWordsIgnoreMorphology(String basicForm, boolean registerCheck){
+            String jpql = "SELECT of FROM OtherForms of WHERE ";
+            if (registerCheck) {
+                jpql += "of.form = :basicForm";
+            } else {
+                jpql += "LOWER(of.form) = :basicForm";
+            }
+            TypedQuery<Word> query = entityManager.createQuery(jpql, Word.class);
+            query.setParameter("basicForm", basicForm);
+
+            return query.getResultList();
+        }
+
+//        public List<Word> searchWordsSynonym(String basicForm, boolean registerCheck){
+//            String jpql = "SELECT of FROM OtherForms of WHERE ";
+//            if (registerCheck) {
+//                jpql += "of.form = :basicForm";
+//            } else {
+//                jpql += "LOWER(of.form) = :basicForm";
 //            }
-//        }
-//    }
+//            TypedQuery<Word> query = entityManager.createQuery(jpql, Word.class);
+//            query.setParameter("basicForm", basicForm);
 //
-//    public class DictionarySearch {
-//        public List<Word> searchWords(String basicForm, boolean registerCheck){
-//            if(!registerCheck)
-//                basicForm = basicForm.toLowerCase();
-//            List<Word> foundWords = new ArrayList<>();
-//            for(Word word : words){
-//                if((registerCheck ? word.getBasicForm() : word.getBasicForm().toLowerCase()).equals(basicForm)){
-//                    foundWords.add(word);
-//                }
-//            }
-//            return foundWords;
+//            return query.getResultList();
 //        }
-//
-//        public List<Word> searchWordsIgnoreMorphology(String basicForm, boolean registerCheck){
-//            if(!registerCheck)
-//                basicForm = basicForm.toLowerCase();
-//            List<Word> foundWords = new ArrayList<>();
-//            for(Word word : words){
-//                if((registerCheck ? word.getBasicForm() : word.getBasicForm().toLowerCase()).equals(basicForm)){
-//                    foundWords.add(word);
-//                }else {
-//                    for(String form : word.getOtherForms().getForms()){
-//                        if((registerCheck ? form : form.toLowerCase()).equals(basicForm)){
-//                            foundWords.add(word);
-//                        }
-//                    }
-//                }
-//            }
-//            return foundWords;
-//        }
-//
+
 //        public List<Word> searchBySynonyms(String basicForm, boolean registerCheck){
 //            if(!registerCheck)
 //                basicForm = basicForm.toLowerCase();
@@ -118,8 +148,8 @@ public class DictionaryManager {
 //            }
 //            return foundWords;
 //        }
-//    }
-//
+    }
+
 //    public class DictionaryStatistic{
 //        public int getQuantityWords(){
 //            return words.size();

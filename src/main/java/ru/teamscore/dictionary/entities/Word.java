@@ -1,6 +1,7 @@
 package ru.teamscore.dictionary.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,9 +16,11 @@ import java.util.Iterator;
 import java.util.List;
 
 @NoArgsConstructor
+@AllArgsConstructor(staticName = "load")
 @Entity
 @Table(name = "word", schema = "words")
 @NamedQuery(name = "wordsCount", query = "select count(*) from Word")
+@NamedQuery(name = "wordById", query = "from Word w where w.id = :id")
 public class Word {
     @Getter
     @Id
@@ -34,7 +37,9 @@ public class Word {
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
     private final List<Definition> definitions = new ArrayList<>();
 
-    private DictionaryManager dictionaryManager;      //нужно ли поле?..
+    @Getter
+    @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
+    private final List<OtherForms> otherForms = new ArrayList<>();
 
     public Word(int id, String basicForm, Definition definition){
         this.id = id;
@@ -46,7 +51,6 @@ public class Word {
         this.id = id;
         this.basicForm = basicForm;
         definitions.add(definition);
-        this.dictionaryManager = dictionaryManager;
         //dictionaryManager.addWord(this);
     }
 
