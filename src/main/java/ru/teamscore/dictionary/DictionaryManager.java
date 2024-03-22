@@ -2,11 +2,13 @@ package ru.teamscore.dictionary;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.SynchronizationType;
 import jakarta.persistence.TypedQuery;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import ru.teamscore.dictionary.entities.Definition;
+import ru.teamscore.dictionary.entities.Synonym;
 import ru.teamscore.dictionary.entities.Word;
 
 import java.util.*;
@@ -21,8 +23,8 @@ public class DictionaryManager {
     @Getter
     private final DictionarySearch search = new DictionarySearch();
 
-//    @Getter
-//    private final DictionaryStatistic statistic = new DictionaryStatistic();
+    @Getter
+    private final DictionaryStatistic statistic = new DictionaryStatistic();
 
     public List<Word> getWordsPage(int page, int pageSize){
         String jpql = "SELECT word FROM Word word ORDER BY word.id";
@@ -107,70 +109,60 @@ public class DictionaryManager {
             return query.getResultList();
         }
 
-//        public List<Word> searchWordsSynonym(String basicForm, boolean registerCheck){
-//            String jpql = "SELECT of FROM OtherForms of WHERE ";
-//            if (registerCheck) {
-//                jpql += "of.form = :basicForm";
-//            } else {
-//                jpql += "LOWER(of.form) = :basicForm";
+//        public List<Word> searchWordsBySynonyms(List<Word> words){
+//            List<Definition> definitions = new ArrayList<>();
+//            for (Word word : words) {
+//                String jpql = "SELECT d FROM Definition d JOIN Word w ON d.word = w.id " +
+//                                "WHERE d.word = :wordId";
+//                TypedQuery<Definition> query = entityManager.createQuery(jpql, Definition.class);
+//                query.setParameter("wordId", word.getId());
+//                definitions.addAll(query.getResultList());
 //            }
-//            TypedQuery<Word> query = entityManager.createQuery(jpql, Word.class);
-//            query.setParameter("basicForm", basicForm);
 //
-//            return query.getResultList();
+//            List<Synonym> synonyms = new ArrayList<>();
+//            for (Definition definition : definitions) {
+//                String synonymJpql = "SELECT s FROM Synonyms s JOIN Definition d ON s.definition_id = d.id " +
+//                        "WHERE s.definition_id = :id";
+//                TypedQuery<Synonym> query = entityManager.createQuery(synonymJpql, Synonym.class);
+//                query.setParameter("id", definition.getId());
+//                synonyms.addAll(query.getResultList());
+//            }
+//
+//            List<Word> words2 = new ArrayList<>();
+//            for (Synonym synonym : synonyms) {
+//                String synonymJpql = "SELECT w FROM Word w JOIN Synonym s ON w.id = s.synonym";
+//                TypedQuery<Word> query = entityManager.createQuery(synonymJpql, Word.class);
+//                words2.addAll(query.getResultList());
+//            }
+//
+//            return words2;
 //        }
 
-//        public List<Word> searchBySynonyms(String basicForm, boolean registerCheck){
-//            if(!registerCheck)
-//                basicForm = basicForm.toLowerCase();
-//            List<Word> foundWords = new ArrayList<>();
-//            for(Word word : words){
-//                if((registerCheck ? word.getBasicForm() : word.getBasicForm().toLowerCase()).equals(basicForm)){
-//                    foundWords.add(word);
-//                }else {
-//                    for(String form : word.getOtherForms().getForms()){
-//                        if((registerCheck ? form : form.toLowerCase()).equals(basicForm)){
-//                            foundWords.add(word);
-//                        }
-//                    }
-//                }
-//            }
-//            return foundWords;
-//        }
-//
-//        public List<Word> searchByDefinitionText(String definitionText) {
-//            List<Word> foundWords = new ArrayList<>();
-//            for(Word word : words){
-//                for (Definition definition : word.getDefinitions()){
-//                    if(definition.getDefinitionText() == definitionText)
-//                        foundWords.add(word);
-//                }
-//            }
-//            return foundWords;
-//        }
+        public List<Word> searchByDefinitionText(String definitionText){
+            String jpql = "SELECT w FROM Word w JOIN Definition d ON w.id = d.word.id WHERE d.definitionText LIKE :definitionText";
+            TypedQuery<Word> query = entityManager.createQuery(jpql, Word.class);
+            query.setParameter("definitionText", definitionText);
+            return query.getResultList();
+        }
     }
 
-//    public class DictionaryStatistic{
-//        public int getQuantityWords(){
-//            return words.size();
-//        }
-//
-//        public int getQuantityDefinition(){
-//            int quantity = 0;
-//            for (Word word : words){
-//                quantity += word.getDefinitions().size();
-//            }
-//            return quantity;
-//        }
-//
-//        public int getQuantitySynonyms(){
-//            int quantity = 0;
-//            for (Word word : words){
-//                for(Definition definition : word.getDefinitions()) {
-//                    quantity += definition.getSynonyms().size();
-//                }
-//            }
-//            return quantity;
-//        }
-//    }
+    public class DictionaryStatistic{
+        public long getQuantityWords(){
+            return entityManager
+                    .createNamedQuery("wordsCount", Long.class)
+                    .getSingleResult();
+        }
+
+        public long getQuantityDefinition(){
+            return entityManager
+                    .createNamedQuery("definitionsCount", Long.class)
+                    .getSingleResult();
+        }
+
+        public long getQuantitySynonyms(){
+            return entityManager
+                    .createNamedQuery("synonymsCount", Long.class)
+                    .getSingleResult();
+        }
+    }
 }

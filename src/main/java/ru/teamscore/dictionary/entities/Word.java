@@ -22,9 +22,9 @@ import java.util.List;
 @NamedQuery(name = "wordsCount", query = "select count(*) from Word")
 @NamedQuery(name = "wordById", query = "from Word w where w.id = :id")
 public class Word {
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private long id;
 
     @Getter
@@ -50,35 +50,6 @@ public class Word {
     public Word(int id, String basicForm, Definition definition, DictionaryManager dictionaryManager){
         this.id = id;
         this.basicForm = basicForm;
-        definitions.add(definition);
-        //dictionaryManager.addWord(this);
-    }
-
-    public Definition getDefinition(int id) {
-        for (Definition definition : definitions){
-            if (definition.getId() == id){
-                return definition;
-            }
-        }
-        return null;
-    }
-
-    public void deleteDefinition(int id){
-        Iterator<Definition> iterator = definitions.iterator();
-        while (iterator.hasNext()) {
-            Definition definition = iterator.next();
-            if (definition.getId() == id) {
-                iterator.remove();
-            }
-        }
-    }
-
-    public void addDefinition(Definition definition){
-        for (Definition definition1 : definitions){
-            if (definition1.getId() == definition.getId()){
-                return;
-            }
-        }
         definitions.add(definition);
     }
 }

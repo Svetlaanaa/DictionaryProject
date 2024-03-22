@@ -35,7 +35,6 @@ ALTER TABLE "definitions"."definition" OWNER TO dictionary_test_user;
 create table "definitions"."source" (
 	"id" bigserial primary key,
 	"definition_id" bigint references "definitions"."definition"("id") on delete cascade,
-	"word_id" bigint references "words"."word"("id") on delete cascade,
 	"source" text not null
 );
 ALTER TABLE "definitions"."source" OWNER TO dictionary_test_user;

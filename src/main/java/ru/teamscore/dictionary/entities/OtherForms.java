@@ -25,16 +25,4 @@ public class OtherForms {
     @JoinColumn(name = "word_id")
     private Word word;
 
-//    public void addForm(String form){
-//        this.forms.add(form);
-//    }
-//
-//    public void deleteForm(String form){
-//        this.forms.remove(form);
-//    }
-//
-//    public void editForm(String form, String newForm){
-//        this.forms.remove(form);
-//        this.forms.add(newForm);
-//    }
 }
