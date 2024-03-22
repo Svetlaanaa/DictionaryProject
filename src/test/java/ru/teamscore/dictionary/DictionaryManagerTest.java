@@ -118,44 +118,22 @@ class DictionaryManagerTest {
         assertEquals(1, testDictionaryManager.getSearch().searchWords("Книгу", false, false).size());
     }
 
-//    @Test
-//    void searchWordsIgnoreMorphology(){
-//        assertEquals(1, testDictionaryManager.getSearch().searchWordsIgnoreMorphology("форма 1_1", false).size());
-//        assertEquals(1, testDictionaryManager.getSearch().searchWordsIgnoreMorphology("слово 1", false).size());
-//        assertEquals(0, testDictionaryManager.getSearch().searchWordsIgnoreMorphology("абвгд", false).size());
-//    }
-//
-//    @Test
-//    void searchBySynonyms(){
-//        assertEquals(1, testDictionaryManager.getSearch().searchBySynonyms("слово 6", false).size());
-//        assertEquals(1, testDictionaryManager.getSearch().searchBySynonyms("слово 7", false).size());
-//        assertEquals(0, testDictionaryManager.getSearch().searchBySynonyms("абвгд", false).size());
-//    }
-//
-//    @Test
-//    void searchByDefinitionText(){
-//        assertEquals(5, testDictionaryManager.getSearch().searchByDefinitionText("Текст определения 1").size());
-//        assertEquals(5, testDictionaryManager.getSearch().searchByDefinitionText("Текст определения 2").size());
-//        assertEquals(0, testDictionaryManager.getSearch().searchByDefinitionText("абвгд").size());
-//    }
-//
-//    @Test
-//    void getQuantityDefinition(){
-//        assertEquals(10, testDictionaryManager.getStatistic().getQuantityDefinition());
-//
-//        testWords.get(1).addDefinition(new Definition(2, "Текст определения 2", SpeechPart.NOUN));
-//        assertEquals(11, testDictionaryManager.getStatistic().getQuantityDefinition());
-//    }
-//
-//    @Test
-//    void getQuantitySynonyms(){
-//        assertEquals(5, testDictionaryManager.getStatistic().getQuantitySynonyms());
-//
-//        testWords.get(1).getDefinition(1).addSynonym(new Word(
-//                11,
-//                "слово 11",
-//                new Definition(1, "Текст определения 2", testWords.get(1).getDefinition(1).getSpeechPart()),
-//                testDictionaryManager));
-//        assertEquals(6, testDictionaryManager.getStatistic().getQuantitySynonyms());
-//    }
+    @Test
+    void searchByDefinitionText(){
+        testDictionaryManager = new DictionaryManager(entityManager);
+        assertEquals(1, testDictionaryManager.getSearch().searchByDefinitionText("Делать резкий прыжок с ноги на ногу. Действие быстрое и энергичное.").size());
+        assertEquals(0, testDictionaryManager.getSearch().searchByDefinitionText("Текст определения").size());
+    }
+
+    @Test
+    void getQuantityDefinition(){
+        testDictionaryManager = new DictionaryManager(entityManager);
+        assertEquals(17, testDictionaryManager.getStatistic().getQuantityDefinition());
+    }
+
+    @Test
+    void getQuantitySynonyms(){
+        testDictionaryManager = new DictionaryManager(entityManager);
+        assertEquals(2, testDictionaryManager.getStatistic().getQuantitySynonyms());
+    }
 }

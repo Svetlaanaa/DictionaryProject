@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "synonym", schema = "definitions")
+@NamedQuery(name = "synonymsCount", query = "select count(*) from Synonym")
 public class Synonym {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
