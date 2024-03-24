@@ -4,6 +4,12 @@
 const api = {
   async getDictionary(page, pageSize, sorting, filterBy) {
     let items = mockCatalog.items;
+    if (filterBy) {
+      items = items.filter(
+        (i) =>
+          i.word == filterBy || i.word.match(new RegExp(filterBy, "gi")) || i.definition.match(new RegExp(filterBy, "gi"))
+      );
+    }
     if (sorting) {
       items = sorted(items, sorting);
     }

@@ -3,6 +3,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const dictionaryContainer = document.getElementById("dictionary-container");
   const pagination = document.getElementById("dictionary-pagination");
+  const search = document.getElementById("input-search");
   const sortOptions = document.querySelectorAll("[sortBy]");
   const loadingSpinner = document.getElementById("loading");
   const alert = document.getElementById("alert");
@@ -13,8 +14,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let pageSize = 10;
   let pagesCountSet = false; // Переменная для отслеживания вызова функции setPagesCount
 
+  search.addEventListener("change", (evt) => {
+    setFilter(evt.target.value);
+  });
 
-  setSorting("title");
+  setSorting("word");
   loadDictionary();
 
   function loadDictionary() {
@@ -39,6 +43,11 @@ document.addEventListener("DOMContentLoaded", () => {
         setAlert(alert, "Произошла ошибка при загрузке словаря");
       })
       .finally(() => setLoading(loadingSpinner, false));
+  }
+
+  function setFilter(filter) {
+    filterBy = filter;
+    loadDictionary();
   }
 
   function setSorting(field) {
