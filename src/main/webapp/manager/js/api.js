@@ -6,8 +6,14 @@ const api = {
     let items = mockCatalog.items;
     if (filterBy) {
       items = items.filter(
-        (i) =>
-          i.word == filterBy || i.word.match(new RegExp(filterBy, "gi")) || i.definition.match(new RegExp(filterBy, "gi"))
+        (i) =>{
+          const hasMatchingSynonym = Array.isArray(i.synonyms) && i.synonyms.some(synonym =>
+            synonym.match(new RegExp(filterBy, "gi"))
+          );  
+          return i.word.match(new RegExp(filterBy, "gi")) 
+          || i.definition.match(new RegExp(filterBy, "gi"))
+          || hasMatchingSynonym;
+        }
       );
     }
     if (sorting) {
