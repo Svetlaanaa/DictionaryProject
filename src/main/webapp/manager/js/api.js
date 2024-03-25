@@ -21,7 +21,7 @@ const api = {
     }
     if (checkRandom) {
       const randomIndex = Math.floor(Math.random() * items.length);
-      return [items[randomIndex]]; // Возвращаем массив с одним случайным элементом
+      return [items[randomIndex]];
     } else {
       return items.slice(page * pageSize, (page + 1) * pageSize);
     }

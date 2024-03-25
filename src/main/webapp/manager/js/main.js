@@ -38,11 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
       api.getPagesCount(pageSize),
     ])
       .then(([dictionary, pagesCount]) => {
-        setCatalog(dictionaryContainer, dictionary);
-        //if (!pagesCountSet) {
-            setPagesCount(pagesCount); 
-            //pagesCountSet = true;
-          //}
+        setDictionary(dictionaryContainer, dictionary);
+        setPagesCount(pagesCount); 
       })
       .catch((err) => {
         console.error("getDictionary failed", err);
@@ -62,12 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
     loadDictionary();
   }
 
-  function setCatalog(catalogContainer, items) {
-    for (i of items) {
-      catalogContainer.append(createCard(i));
+  function setDictionary(catalogContainer, items) {
+    for (const [index, item] of items.entries()) {
+      catalogContainer.append(createCard(item, index));
     }
-
-    function createCard(item) {
+    
+    function createCard(item, index) {
         const card = document.createElement('div');
         card.classList.add('card');
         card.style.width = '70rem';
@@ -85,9 +82,10 @@ document.addEventListener("DOMContentLoaded", () => {
         description.textContent = item.definition;
 
         const link = document.createElement('a');
-        link.href = '#';
         link.classList.add('btn', 'btn-primary');
+        link.id = 'word-' + index;
         link.textContent = 'Читать больше';
+        link.href = `../currentWord/html/index.html?index=${index}`;
 
         cardBody.appendChild(title);
         cardBody.appendChild(description);

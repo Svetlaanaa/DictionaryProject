@@ -1,4 +1,3 @@
-//всё нужно
 function autoFormat(value, format) {
   switch (format || typeof value) {
     case "string":
