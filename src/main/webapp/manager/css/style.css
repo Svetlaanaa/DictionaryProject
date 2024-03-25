@@ -87,6 +87,9 @@ p{
     margin-right: auto;
 
   }
+  .row{
+    margin-bottom: -50px;
+  }
 
 @media (max-width: 960px) {
     body {

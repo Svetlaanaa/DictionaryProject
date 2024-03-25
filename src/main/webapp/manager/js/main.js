@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dictionaryContainer = document.getElementById("dictionary-container");
   const pagination = document.getElementById("dictionary-pagination");
   const search = document.getElementById("input-search");
+  const random = document.getElementById("link-random");
   const sortOptions = document.querySelectorAll("[sortBy]");
   const loadingSpinner = document.getElementById("loading");
   const alert = document.getElementById("alert");
@@ -12,9 +13,14 @@ document.addEventListener("DOMContentLoaded", () => {
   let sorting = {};
   let currentPage = 0;
   let pageSize = 10;
-  let pagesCountSet = false; // Переменная для отслеживания вызова функции setPagesCount
+  let checkRandom = false;
 
   search.addEventListener("change", (evt) => {
+    setFilter(evt.target.value);
+  });
+
+  random.addEventListener("click", (evt) => {
+    checkRandom = true;
     setFilter(evt.target.value);
   });
 
@@ -28,11 +34,11 @@ document.addEventListener("DOMContentLoaded", () => {
     pagination.replaceChildren();
 
     Promise.all([
-      api.getDictionary(currentPage, pageSize, sorting, filterBy),
+      api.getDictionary(currentPage, pageSize, sorting, filterBy, checkRandom),
       api.getPagesCount(pageSize),
     ])
-      .then(([catalog, pagesCount]) => {
-        setCatalog(dictionaryContainer, catalog);
+      .then(([dictionary, pagesCount]) => {
+        setCatalog(dictionaryContainer, dictionary);
         //if (!pagesCountSet) {
             setPagesCount(pagesCount); 
             //pagesCountSet = true;

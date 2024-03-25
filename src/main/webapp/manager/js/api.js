@@ -2,7 +2,7 @@
 
 //export
 const api = {
-  async getDictionary(page, pageSize, sorting, filterBy) {
+  async getDictionary(page, pageSize, sorting, filterBy, checkRandom) {
     let items = mockCatalog.items;
     if (filterBy) {
       items = items.filter(
@@ -11,7 +11,7 @@ const api = {
             synonym.match(new RegExp(filterBy, "gi"))
           );  
           return i.word.match(new RegExp(filterBy, "gi")) 
-          || i.definition.match(new RegExp(filterBy, "gi"))
+          || i.definition == filterBy
           || hasMatchingSynonym;
         }
       );
@@ -19,7 +19,12 @@ const api = {
     if (sorting) {
       items = sorted(items, sorting);
     }
-    return items.slice(page * pageSize, (page + 1) * pageSize);
+    if (checkRandom) {
+      const randomIndex = Math.floor(Math.random() * items.length);
+      return [items[randomIndex]]; // Возвращаем массив с одним случайным элементом
+    } else {
+      return items.slice(page * pageSize, (page + 1) * pageSize);
+    }
   },
 
   getPagesCount(pageSize) {
