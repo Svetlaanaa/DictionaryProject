@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     checkRandom = true;
     setFilter(evt.target.value);
   });
+  
 
   setSorting("word");
   loadDictionary();
@@ -60,8 +61,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setDictionary(catalogContainer, items) {
-    for (const [index, item] of items.entries()) {
-      catalogContainer.append(createCard(item, index));
+    let indexWord;
+    for (i of items) {
+      for (const [index, w] of mockCatalog.items.entries()) {
+        if(i.word == w.word){
+          indexWord = index;
+        }
+      }
+      catalogContainer.append(createCard(i, indexWord));
     }
     
     function createCard(item, index) {
