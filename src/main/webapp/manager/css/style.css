@@ -1,0 +1,110 @@
+body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 15rem 1fr;
+    gap: 0;
+    min-height: 100vh;
+  }
+  
+  header {
+    grid-row: 1;
+    grid-column: 1/3;
+  }
+
+  main {
+    grid-row: 2/4;
+    grid-column: 1/3;
+  }
+  
+  footer {
+    grid-column: 1/3;
+  }
+  
+.form-control{
+    border-color: brown;
+    border-width: 1px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.form-control:focus {
+    border-color: rgb(98, 24, 24);
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25); /* Добавление тени при фокусе */
+  }
+
+.btn.btn-outline-primary{
+    color: brown;
+    border-color: brown;
+    border-width: 2px;
+}
+
+.btn.btn-outline-primary:hover{
+    background-color: brown;
+    color: white;
+}
+
+.p-3{
+    background-color: rgb(91, 21, 21);
+}
+
+.container-fluid.d-flex.flex-sm-row.justify-content-between{
+    max-width: 50%;
+}
+
+p{
+    margin-bottom: 2px;
+}
+
+  .link-info {
+    color: brown; /* Изменение цвета текста ссылки */
+    text-decoration: none; /* Убрать подчеркивание ссылки */
+  }
+
+  .card-header{
+    color: brown;
+    font-weight: 700;
+    font-size: 30px;
+  }
+
+  .pagination.justify-content-end{
+    margin-bottom: 0;
+  }
+
+  .active>.page-link, .page-link.active{
+    border-color: brown;
+  }
+
+  .btn.btn-primary{
+    background-color: white;
+    color: brown;
+    border: 0cap;
+    padding: 0;
+    margin-top: 10px;
+  }
+
+  .card{
+    margin-left: auto;
+    margin-right: auto;
+
+  }
+  .row{
+    margin-bottom: -50px;
+  }
+
+@media (max-width: 960px) {
+    body {
+      grid-template-rows: auto auto 1fr auto;
+      grid-template-columns: 1fr;
+    }
+  
+    main {
+      grid-row: 3;
+      grid-column: 1;
+    }
+  
+    footer {
+      grid-row: 4;
+      grid-column: 1;
+    }
+  }
+  
