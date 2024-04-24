@@ -16,7 +16,7 @@ import java.util.List;
 public class WordService {
     @Autowired
     private final WordRepository wordRepository;
-
+    @Autowired
     private final ConverterWord converterWord;
 
     public List<WordDto> getDictionary() {

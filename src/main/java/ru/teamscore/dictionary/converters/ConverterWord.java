@@ -1,5 +1,8 @@
 package ru.teamscore.dictionary.converters;
 
+import jakarta.persistence.Access;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.teamscore.dictionary.dto.DefinitionDto;
 import ru.teamscore.dictionary.dto.OtherFormDto;
 import ru.teamscore.dictionary.dto.WordDto;
@@ -10,15 +13,18 @@ import ru.teamscore.dictionary.model.entities.Word;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ConverterWord {
+    @Autowired
     private ConverterDefinition converterDefinition;
+    @Autowired
     private ConverterOtherForm converterOtherForm;
 
     public Word fromDto(WordDto wordDto){
         Word word = new Word();
         word.setBasicForm(wordDto.getBasicForm());
-        word.setDefinitions(getDefinitionList(wordDto.getDefinitionsDto()));//dto -> entity
-        word.setOtherForms(getOtherForms(wordDto.getOtherFormsDto())); //dto -> entity
+        word.setDefinitions(getDefinitionList(wordDto.getDefinitionsDto()));
+        word.setOtherForms(getOtherForms(wordDto.getOtherFormsDto()));
         return word;
     }
 
