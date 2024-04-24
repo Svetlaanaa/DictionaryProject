@@ -2,14 +2,11 @@ package ru.teamscore.dictionary;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import jakarta.persistence.SynchronizationType;
 import jakarta.persistence.TypedQuery;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import ru.teamscore.dictionary.entities.Definition;
-import ru.teamscore.dictionary.entities.Synonym;
-import ru.teamscore.dictionary.entities.Word;
+import ru.teamscore.dictionary.model.entities.Word;
 
 import java.util.*;
 
@@ -97,7 +94,7 @@ public class DictionaryManager {
         }
 
         public List<Word> searchWordsIgnoreMorphology(String basicForm, boolean registerCheck){
-            String jpql = "SELECT of FROM OtherForms of WHERE ";
+            String jpql = "SELECT of FROM OtherForm of WHERE ";
             if (registerCheck) {
                 jpql += "of.form = :basicForm";
             } else {

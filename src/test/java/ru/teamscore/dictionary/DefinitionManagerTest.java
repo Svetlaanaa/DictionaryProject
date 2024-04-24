@@ -3,16 +3,14 @@ package ru.teamscore.dictionary;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
-import lombok.NonNull;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.*;
-import ru.teamscore.dictionary.entities.Definition;
-import ru.teamscore.dictionary.entities.OtherForms;
-import ru.teamscore.dictionary.entities.Synonym;
-import ru.teamscore.dictionary.entities.Word;
+import ru.teamscore.dictionary.model.entities.Definition;
+import ru.teamscore.dictionary.model.entities.OtherForm;
+import ru.teamscore.dictionary.model.entities.Synonym;
+import ru.teamscore.dictionary.model.entities.Word;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +24,7 @@ class DefinitionManagerTest {
                 .configure("hibernate-postgres.cfg.xml")
                 .addAnnotatedClass(Word.class)
                 .addAnnotatedClass(Definition.class)
-                .addAnnotatedClass(OtherForms.class)
+                .addAnnotatedClass(OtherForm.class)
                 .addAnnotatedClass(Synonym.class)
                 .buildSessionFactory();
 

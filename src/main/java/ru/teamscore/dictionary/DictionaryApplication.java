@@ -3,17 +3,13 @@ package ru.teamscore.dictionary;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.cfg.Configuration;
-import org.modelmapper.AbstractConverter;
-import org.modelmapper.Converter;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import ru.teamscore.dictionary.entities.Definition;
-import ru.teamscore.dictionary.entities.OtherForms;
-import ru.teamscore.dictionary.entities.Synonym;
-import ru.teamscore.dictionary.entities.Word;
+import ru.teamscore.dictionary.model.entities.Definition;
+import ru.teamscore.dictionary.model.entities.OtherForm;
+import ru.teamscore.dictionary.model.entities.Synonym;
+import ru.teamscore.dictionary.model.entities.Word;
 
 @SpringBootApplication
 public class DictionaryApplication {
@@ -34,7 +30,7 @@ public class DictionaryApplication {
         return new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(Word.class)
-                .addAnnotatedClass(OtherForms.class)
+                .addAnnotatedClass(OtherForm.class)
                 .addAnnotatedClass(Synonym.class)
                 .addAnnotatedClass(Definition.class)
                 .buildSessionFactory();

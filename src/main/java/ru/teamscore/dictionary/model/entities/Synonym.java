@@ -1,4 +1,4 @@
-package ru.teamscore.dictionary.entities;
+package ru.teamscore.dictionary.model.entities;
 
 import jakarta.persistence.*;
 

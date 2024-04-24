@@ -1,4 +1,4 @@
-package ru.teamscore.dictionary.entities;
+package ru.teamscore.dictionary.model.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,11 +8,8 @@ import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import ru.teamscore.dictionary.DictionaryManager;
-import ru.teamscore.dictionary.entities.Definition;
-import ru.teamscore.dictionary.entities.OtherForms;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @NoArgsConstructor
@@ -34,12 +31,14 @@ public class Word {
     private String basicForm;
 
     @Getter
+    @Setter
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
-    private final List<Definition> definitions = new ArrayList<>();
+    private List<Definition> definitions = new ArrayList<>();
 
     @Getter
+    @Setter
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL)
-    private final List<OtherForms> otherForms = new ArrayList<>();
+    private List<OtherForm> otherForms = new ArrayList<>();
 
     public Word(int id, String basicForm, Definition definition){
         this.id = id;

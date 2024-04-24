@@ -1,17 +1,14 @@
-package ru.teamscore.dictionary.entities;
+package ru.teamscore.dictionary.model.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @NoArgsConstructor
 @Entity
 @Table(name = "other_form", schema = "words")
-public class OtherForms {
+public class OtherForm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

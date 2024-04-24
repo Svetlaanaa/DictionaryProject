@@ -3,12 +3,10 @@ package ru.teamscore.dictionary;
 import jakarta.persistence.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import ru.teamscore.dictionary.entities.Definition;
-import ru.teamscore.dictionary.entities.OtherForms;
-import ru.teamscore.dictionary.entities.Synonym;
-import ru.teamscore.dictionary.entities.Word;
+import ru.teamscore.dictionary.model.entities.Definition;
+import ru.teamscore.dictionary.model.entities.OtherForm;
+import ru.teamscore.dictionary.model.entities.Synonym;
 
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,19 +54,19 @@ public class DefinitionManager {
         transaction.commit();
     }
 
-    public void addForm(@NonNull OtherForms form) {
+    public void addForm(@NonNull OtherForm form) {
         entityManager.getTransaction().begin();
         entityManager.persist(form);
         entityManager.getTransaction().commit();
     }
 
-    public void deleteForm(@NonNull OtherForms form) {
+    public void deleteForm(@NonNull OtherForm form) {
         entityManager.getTransaction().begin();
         entityManager.remove(form);
         entityManager.getTransaction().commit();
     }
 
-    public void updateForm(@NonNull OtherForms form) {
+    public void updateForm(@NonNull OtherForm form) {
         entityManager.getTransaction().begin();
         entityManager.merge(form);
         entityManager.getTransaction().commit();

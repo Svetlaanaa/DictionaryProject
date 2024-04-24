@@ -1,4 +1,4 @@
-package ru.teamscore.dictionary.enums;
+package ru.teamscore.dictionary.model.enums;
 
 public enum SpeechPart {
     NOUN("существительное"),

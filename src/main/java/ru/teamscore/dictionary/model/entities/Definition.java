@@ -1,16 +1,13 @@
-package ru.teamscore.dictionary.entities;
+package ru.teamscore.dictionary.model.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.teamscore.dictionary.enums.SpeechPart;
+import ru.teamscore.dictionary.model.enums.SpeechPart;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @NoArgsConstructor
 @Entity
@@ -50,7 +47,8 @@ public class Definition {
     @CollectionTable(name = "source", schema = "definitions", joinColumns = @JoinColumn(name = "definition_id"))
     @Column(name = "source")
     @Getter
-    private final List<String> sources = new ArrayList<>();
+    @Setter
+    private List<String> sources = new ArrayList<>();
 
 
     public Definition(int id, String definitionText, SpeechPart speechPart){
@@ -64,4 +62,5 @@ public class Definition {
         this.definitionText = definitionText;
         this.speechPart = speechPart;
     }
+
 }
