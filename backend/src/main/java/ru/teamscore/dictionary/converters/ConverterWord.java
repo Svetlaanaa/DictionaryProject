@@ -30,6 +30,7 @@ public class ConverterWord {
 
     public WordDto toDto(Word word){
         WordDto wordDto = new WordDto();
+        wordDto.setIdWord(word.getId());
         wordDto.setBasicForm(word.getBasicForm());
         wordDto.setDefinitionsDto(setDefinitionList(word.getDefinitions()));
         wordDto.setOtherFormsDto(setOtherForms(word.getOtherForms()));

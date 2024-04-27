@@ -50,14 +50,13 @@ public class Definition {
     @Setter
     private List<String> sources = new ArrayList<>();
 
-
-    public Definition(int id, String definitionText, SpeechPart speechPart){
+    public Definition(int id, String definitionText, SpeechPart speechPart) {
         this.id = id;
         this.definitionText = definitionText;
         this.speechPart = speechPart;
     }
 
-    public Definition(int id, String definitionText, SpeechPart speechPart, Word synonym){
+    public Definition(int id, String definitionText, SpeechPart speechPart, Word synonym) {
         this.id = id;
         this.definitionText = definitionText;
         this.speechPart = speechPart;

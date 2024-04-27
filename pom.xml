@@ -12,11 +12,11 @@
     <groupId>com.teamscore</groupId>
     <artifactId>dictionary</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Study</name>
+    <name>dictionary</name>
     <description>Study project for Spring Boot</description>
     <packaging>pom</packaging>
     <modules>
-        <module>backend</module>
         <module>frontend</module>
+        <module>backend</module>
     </modules>
 </project>

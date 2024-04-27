@@ -10,4 +10,5 @@ public class DefinitionDto {
     private String definitionText;
     private String usageExample;
     private List<String> sources;
+    private List<WordDto> synonyms;
 }

@@ -27,4 +27,18 @@ public class WordService {
        }
        return wordsDto;
     }
+
+    public WordDto getWord(long id){
+        Word word = wordRepository.findById(id).get();
+        return converterWord.toDto(word);
+    }
+
+//    public List<WordDto> getSynonyms(long id){
+//        if(wordRepository.findById(id).isEmpty())
+//            return null;
+//        List<PojoTask> result = new ArrayList<>();
+//        for (Task task : taskRepository.findAllById(id))
+//            result.add(PojoTask.fromEntity(task));
+//        return result;
+//    }
 }
